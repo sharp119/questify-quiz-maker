@@ -1,10 +1,12 @@
 import { useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { QuizCard, Quiz } from "@/components/QuizCard";
 import { QuizFilters, FilterOptions } from "@/components/QuizFilters";
 import { QuizStats } from "@/components/QuizStats";
-import { Search, Loader2 } from "lucide-react";
+import { QuizHistory } from "@/components/QuizHistory";
+import { Search, Loader2, Compass, History } from "lucide-react";
 import { toast } from "sonner";
 
 // Mock data - in a real app, this would come from an API
@@ -146,6 +148,7 @@ const categories = [
 ];
 
 const Quizzes = () => {
+  const [activeTab, setActiveTab] = useState("explore");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [filters, setFilters] = useState<FilterOptions>({
@@ -231,71 +234,91 @@ const Quizzes = () => {
         {/* Stats */}
         <QuizStats completed={12} inProgress={3} avgScore={85} streak={7} />
 
-        {/* Search */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            placeholder="Search quizzes..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
-        </div>
+        {/* Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto mb-6">
+            <TabsTrigger value="explore" className="flex items-center gap-2">
+              <Compass className="w-4 h-4" />
+              <span>Explore</span>
+            </TabsTrigger>
+            <TabsTrigger value="history" className="flex items-center gap-2">
+              <History className="w-4 h-4" />
+              <span>History</span>
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Filters */}
-        <QuizFilters
-          categories={categories}
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
-          filters={filters}
-          onFiltersChange={setFilters}
-        />
+          <TabsContent value="explore" className="space-y-6">
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                placeholder="Search quizzes..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
 
-        {/* Results count */}
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
-            {filteredQuizzes.length} {filteredQuizzes.length === 1 ? "quiz" : "quizzes"} found
-          </p>
-        </div>
+            {/* Filters */}
+            <QuizFilters
+              categories={categories}
+              selectedCategory={selectedCategory}
+              onCategoryChange={setSelectedCategory}
+              filters={filters}
+              onFiltersChange={setFilters}
+            />
 
-        {/* Quiz Grid */}
-        {displayedQuizzes.length > 0 ? (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {displayedQuizzes.map((quiz) => (
-              <QuizCard key={quiz.id} quiz={quiz} onClick={() => handleQuizClick(quiz)} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-16">
-            <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-xl font-semibold mb-2 text-foreground">No quizzes found</h3>
-            <p className="text-muted-foreground">
-              Try adjusting your filters or search query
-            </p>
-          </div>
-        )}
+            {/* Results count */}
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">
+                {filteredQuizzes.length} {filteredQuizzes.length === 1 ? "quiz" : "quizzes"} found
+              </p>
+            </div>
 
-        {/* Load More */}
-        {hasMore && (
-          <div className="flex justify-center pt-4">
-            <Button
-              onClick={handleLoadMore}
-              disabled={isLoadingMore}
-              size="lg"
-              variant="outline"
-              className="min-w-[200px]"
-            >
-              {isLoadingMore ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Loading...
-                </>
-              ) : (
-                `Load More (${filteredQuizzes.length - visibleQuizzes} remaining)`
-              )}
-            </Button>
-          </div>
-        )}
+            {/* Quiz Grid */}
+            {displayedQuizzes.length > 0 ? (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {displayedQuizzes.map((quiz) => (
+                  <QuizCard key={quiz.id} quiz={quiz} onClick={() => handleQuizClick(quiz)} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-16">
+                <div className="text-6xl mb-4">🔍</div>
+                <h3 className="text-xl font-semibold mb-2 text-foreground">No quizzes found</h3>
+                <p className="text-muted-foreground">
+                  Try adjusting your filters or search query
+                </p>
+              </div>
+            )}
+
+            {/* Load More */}
+            {hasMore && (
+              <div className="flex justify-center pt-4">
+                <Button
+                  onClick={handleLoadMore}
+                  disabled={isLoadingMore}
+                  size="lg"
+                  variant="outline"
+                  className="min-w-[200px]"
+                >
+                  {isLoadingMore ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Loading...
+                    </>
+                  ) : (
+                    `Load More (${filteredQuizzes.length - visibleQuizzes} remaining)`
+                  )}
+                </Button>
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="history">
+            <QuizHistory />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
