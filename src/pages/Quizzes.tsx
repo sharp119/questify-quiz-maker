@@ -6,8 +6,9 @@ import { QuizCard, Quiz } from "@/components/QuizCard";
 import { QuizFilters, FilterOptions } from "@/components/QuizFilters";
 import { QuizStats } from "@/components/QuizStats";
 import MyCourses from "@/components/MyCourses";
-import { Search, Loader2, Compass, BookOpen } from "lucide-react";
+import { Search, Loader2, Compass, BookOpen, FileText } from "lucide-react";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 // Mock data - in a real app, this would come from an API
 const mockQuizzes: Quiz[] = [
@@ -218,15 +219,30 @@ const Quizzes = () => {
     });
   };
 
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="bg-gradient-primary text-primary-foreground py-8 px-4">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-2">Explore Quizzes</h1>
-          <p className="text-primary-foreground/90 text-sm sm:text-base">
-            Test your knowledge and track your progress
-          </p>
+          <div className="flex items-start justify-between">
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-bold mb-2">Explore Quizzes</h1>
+              <p className="text-primary-foreground/90 text-sm sm:text-base">
+                Test your knowledge and track your progress
+              </p>
+            </div>
+            <Button 
+              variant="secondary" 
+              size="icon"
+              onClick={() => navigate("/performance")}
+              className="bg-primary-foreground/10 hover:bg-primary-foreground/20 border-primary-foreground/20"
+              title="View My Performance"
+            >
+              <FileText className="w-5 h-5" />
+            </Button>
+          </div>
         </div>
       </div>
 

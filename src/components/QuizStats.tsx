@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Trophy, Target, TrendingUp, Zap } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface QuizStatsProps {
   completed: number;
@@ -9,9 +10,21 @@ interface QuizStatsProps {
 }
 
 export const QuizStats = ({ completed, inProgress, avgScore, streak }: QuizStatsProps) => {
+  const navigate = useNavigate();
+
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-      <Card className="p-4 bg-gradient-card">
+    <div 
+      className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6 cursor-pointer" 
+      onClick={() => navigate("/performance")}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          navigate("/performance");
+        }
+      }}
+    >
+      <Card className="p-4 bg-gradient-card transition-transform hover:scale-105">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-gradient-success flex items-center justify-center">
             <Trophy className="w-5 h-5 text-success-foreground" />
@@ -23,7 +36,7 @@ export const QuizStats = ({ completed, inProgress, avgScore, streak }: QuizStats
         </div>
       </Card>
 
-      <Card className="p-4 bg-gradient-card">
+      <Card className="p-4 bg-gradient-card transition-transform hover:scale-105">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-gradient-primary flex items-center justify-center">
             <Target className="w-5 h-5 text-primary-foreground" />
@@ -35,7 +48,7 @@ export const QuizStats = ({ completed, inProgress, avgScore, streak }: QuizStats
         </div>
       </Card>
 
-      <Card className="p-4 bg-gradient-card">
+      <Card className="p-4 bg-gradient-card transition-transform hover:scale-105">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-gradient-accent flex items-center justify-center">
             <TrendingUp className="w-5 h-5 text-accent-foreground" />
@@ -47,7 +60,7 @@ export const QuizStats = ({ completed, inProgress, avgScore, streak }: QuizStats
         </div>
       </Card>
 
-      <Card className="p-4 bg-gradient-card">
+      <Card className="p-4 bg-gradient-card transition-transform hover:scale-105">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-gradient-accent flex items-center justify-center animate-pulse-glow">
             <Zap className="w-5 h-5 text-accent-foreground" />
