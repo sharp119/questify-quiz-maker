@@ -5,8 +5,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { QuizCard, Quiz } from "@/components/QuizCard";
 import { QuizFilters, FilterOptions } from "@/components/QuizFilters";
 import { QuizStats } from "@/components/QuizStats";
-import { QuizHistory } from "@/components/QuizHistory";
-import { Search, Loader2, Compass, History } from "lucide-react";
+import MyCourses from "@/components/MyCourses";
+import { Search, Loader2, Compass, BookOpen } from "lucide-react";
 import { toast } from "sonner";
 
 // Mock data - in a real app, this would come from an API
@@ -241,9 +241,9 @@ const Quizzes = () => {
               <Compass className="w-4 h-4" />
               <span>Explore</span>
             </TabsTrigger>
-            <TabsTrigger value="history" className="flex items-center gap-2">
-              <History className="w-4 h-4" />
-              <span>History</span>
+            <TabsTrigger value="my-courses" className="flex items-center gap-2">
+              <BookOpen className="w-4 h-4" />
+              <span>My Courses</span>
             </TabsTrigger>
           </TabsList>
 
@@ -315,8 +315,8 @@ const Quizzes = () => {
             )}
           </TabsContent>
 
-          <TabsContent value="history">
-            <QuizHistory />
+          <TabsContent value="my-courses">
+            <MyCourses />
           </TabsContent>
         </Tabs>
       </div>
